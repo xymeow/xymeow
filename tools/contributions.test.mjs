@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {board,solve,svg,parsePublic} from './contributions.mjs';
+const days=a=>a.map((count,i)=>({date:new Date(Date.UTC(2026,0,4+i)).toISOString().slice(0,10),count,level:count?2:0}));
+test('mapping and boundary numbers',()=>{const b=board(days([1,0,0,0,0,0,0,1,0]));assert.equal(b.cells[1].number,2);assert.equal(b.cells[7].x,1);assert.equal(b.cells[7].y,0);assert.equal(b.cells[6].number,0);});
+test('empty input rejects',()=>assert.throws(()=>board([])));
+test('no contributions clears all',()=>{const r=solve(board(days(Array(21).fill(0))));assert.equal(r.won,true);assert.equal(r.revealed.size,21);assert.equal(r.flags.size,0);});
+test('dense board numbers bounded',()=>{const b=board(days(Array(21).fill(1)));assert.ok(b.cells.every(c=>c.mine&&c.number<=8));assert.ok(solve(b).events.length<=42);});
+test('guess explosion is loss',()=>{const r=solve(board(days([1,0,0,0,0,0,0])));assert.equal(r.lost,true);assert.equal(r.won,false);assert.equal(r.events.at(-1).type,'explode');});
+test('deduced flags valid',()=>{const b=board(days([0,0,1,0,0,0,0,0,0,1,0,0,0,0])),r=solve(b);assert.ok([...r.flags].every(i=>b.cells[i].mine));assert.ok(r.events.filter(e=>e.type==='reveal').every(e=>!b.cells[e.i].mine));});
+test('SVG themes and ordered animation keys',()=>{for(const dark of [false,true]){const s=svg(days(Array(21).fill(0)),dark);assert.ok(s.startsWith('<svg')&&s.endsWith('</svg>')&&!s.includes('<script'));for(const m of s.matchAll(/keyTimes="([^"]+)"/g)){const k=m[1].split(';').map(Number);assert.ok(k.every(n=>n>=0&&n<=1));assert.deepEqual(k,[...k].sort((a,b)=>a-b));}}});
+test('missing public markup rejects',()=>assert.throws(()=>parsePublic('<html/>')));

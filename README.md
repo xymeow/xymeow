@@ -50,6 +50,9 @@ B.Eng. in Computer Science, **USTC** · M.S. in Computer Science, **USC**
 
 ### Contribution playground
 
-![Minesweeper animation layout preview](assets/minesweeper-preview.svg)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/minesweeper-contribution-graph-dark.svg">
+  <img alt="Minesweeper animation of my public GitHub contribution calendar" src="assets/minesweeper-contribution-graph.svg">
+</picture>
 
-*Original animation layout preview using synthetic cells. Real GitHub contribution-calendar data is not connected yet; this is not a contribution or commit statistic.*
+*An animated Minesweeper replay based on my public GitHub contribution calendar, refreshed daily. Contributions include more than commits; this is a visualization, not an interactive game.*
